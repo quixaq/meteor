@@ -27,7 +27,7 @@ meteorFolder.DescendantRemoving:Connect(function(child)
 	r9:FireServer(key)
 end)
 
-while wait() do
+while task.wait() do
 	for _, child in script.Parent:GetChildren() do
 		if child:IsA("LocalScript") then
 			if child.Disabled == true or child.Enabled == false then
