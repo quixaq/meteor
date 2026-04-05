@@ -86,7 +86,7 @@ task.wait(5)
 local interval = script.Parent:GetAttribute("localResetTime")
 local heartbeatInterval = script.Parent:GetAttribute("heartbeatInterval")
 
-while wait() do
+while task.wait() do
 	local toWait = math.floor(interval/heartbeatInterval)*heartbeatInterval-5
 	if tostring(toWait) == "nan" then
 		toWait = 27

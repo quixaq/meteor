@@ -99,7 +99,7 @@ loadEvent.OnInvoke = function(message)
 end
 
 while not session do
-	wait()
+	task.wait()
 end
 
 -- Checks

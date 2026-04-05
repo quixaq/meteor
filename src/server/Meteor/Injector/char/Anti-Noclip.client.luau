@@ -14,7 +14,7 @@ local player = players.LocalPlayer
 local char = player.Character
 local hrp = char:WaitForChild("HumanoidRootPart")
 
-while wait() do
+while task.wait() do
 	if not hrp.CanCollide then
 		r9:FireServer(key)
 	end
