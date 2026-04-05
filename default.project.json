@@ -14,7 +14,7 @@
         "$path": "src/server/Meteor",
         "Packages": {
           "$className": "Folder",
-          "$path": "Packages"
+          "$path": "luau_packages"
         }
       }
     },

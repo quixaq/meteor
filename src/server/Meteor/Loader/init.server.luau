@@ -2,7 +2,7 @@
 
 -- Variables
 local dep = script.dep
-local cryptography = require(script.Parent.Packages.Cryptography)
+local cryptography = require(script.Parent.Packages.cryptography)
 local rand = require(script.Parent.rand)
 
 -- Functions

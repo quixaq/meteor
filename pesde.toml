@@ -1,0 +1,15 @@
+name = "quixaq/meteor"
+version = "0.1.0"
+description = "An Anti-Cheat for Roblox"
+authors = ["Quixaq"]
+repository = "https://github.com/quixaq/meteor/"
+license = "gpl-3.0-or-later"
+
+[target]
+environment = "luau"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+cryptography = { name = "daily3014/cryptography", version = "3.0.1" }
