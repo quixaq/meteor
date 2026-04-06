@@ -17,7 +17,6 @@ local admins = { -- Format: u_<userId> = "<admin_panel_password>",
 	Please DO NOT use your Roblox password, especially if you choose to store it in plain text.
 	If you disabled enableAdminPanel or want the admin to not be able to login you can just set the password to an empty string("") without any prefixes.
 	]]--
-	u_4115533555 = "h_aPYwxKzvVXO2YGQhGSMG0NOAOAjFop6ga01c94e30e1da3eb9fa9a9960ae947c4fbac3695f2dc7fc0249b871be2a617d6d47ba4831cebdd45b8251b23adea8887b0825da77270808c9653c3a954ae6979"
 }
 local maxTries = 5 -- The amount of maximum tries to login to the admin panel before executing the set punishment. Default is 5.
 local punishment = "revoke" -- The punishment for reaching max tries. "revoke" to make the user unable to login or use admin for the current server, "ban" to ban the player for the set duration, "kick" to kick the player. Default is "revoke".
