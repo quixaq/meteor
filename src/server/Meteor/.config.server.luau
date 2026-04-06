@@ -189,6 +189,7 @@ end
 if enableAdminPanel == false then
 	script.Parent.Auth.Enabled = false
 	script.Parent.Injector.char.Auth:Destroy()
+	script.Parent.Injector.char[".LogHandler"]:Destroy()
 	for _, child in script.Parent.Loader.dep.StarterGui.MeteorGui:GetChildren() do
 	    if child.Name ~= "Show" and child.Name ~= "Hide" then
 			child:Destroy()
