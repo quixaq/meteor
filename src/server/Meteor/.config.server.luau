@@ -9,7 +9,7 @@ local admins = { -- Format: u_<userId> = "<admin_panel_password>",
 	--[[
 	For security reasons, we strongly recommend you to use hashes to store passwords here.
 	However to not overcomplicate stuff, we make it not required.
-	To use hashes, please use 
+	To use hashes, please use
 	print(require(game:GetService("ServerScriptService").Meteor.PasswordService).Password("password", ""))
 	in your Roblox Studio console(At the bottom of Roblox Studio) and paste the output string into the password field.
 	If you prefer to use plain text, please add "s_" in front of the password in plain text.
@@ -117,12 +117,6 @@ end
 if type(minAccountAge) ~= "number" then
 	minAccountAge = 30
 end
-if type(maxJumpPower) ~= "number" then
-	maxJumpPower = 60
-end
-if maxJumpPower < 0 then
-	maxJumpPower = 60
-end
 if punishment ~= "revoke" and punishment ~= "ban" and punishment ~= "kick" then
 	punishment = "revoke"
 end
@@ -195,7 +189,11 @@ end
 if enableAdminPanel == false then
 	script.Parent.Auth.Enabled = false
 	script.Parent.Injector.char.Auth:Destroy()
-	script.Parent.Loader.dep.StarterGui.MeteorGui:Destroy()
+	for _, child in script.Parent.Loader.dep.StarterGui.MeteorGui:GetChildren() do
+	    if child.Name ~= "Show" and child.Name ~= "Hide" then
+			child:Destroy()
+		end
+	end
 end
 
 local messages = {cheat,unauthorized,age,tries,verify}
