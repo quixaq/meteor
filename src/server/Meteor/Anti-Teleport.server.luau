@@ -22,7 +22,7 @@ players.PlayerAdded:Connect(function(player)
 		local hrp = char:WaitForChild("HumanoidRootPart")
 		local humanoid = char:WaitForChild("Humanoid")
 		local lastPos = hrp.Position
-		while wait(1) do
+		while task.wait(1) do
 			local sit = humanoid.Sit and sitDetection
 			if (hrp.Position - lastPos).Magnitude > maxSPS and not sit then
 				serverKickEvent:Fire(key, player, "cheat")
