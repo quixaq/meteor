@@ -51,7 +51,7 @@ task.wait(5)
 
 local interval = script.Parent:GetAttribute("heartbeatInterval")
 
-while wait() do
+while task.wait() do
 	task.wait(1)
 	now = false
 	heartbeatBack:FireAllClients()
@@ -81,7 +81,7 @@ while wait() do
 	heartbeated = {}
 	for i, v in ipairs(toKick) do
 		if v then
-			kickEvent:Fire(mainKey, v, "cheat")	
+			kickEvent:Fire(mainKey, v, "cheat")
 		end
 	end
 	now = true
