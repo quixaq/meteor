@@ -1,35 +1,35 @@
+--!strict
 if not script:FindFirstChild("passwd") or script:FindFirstChild("passwd") == nil then
 	script.Parent:Destroy()
 end
 if not script:FindFirstChild("passwd"):IsA("StringValue") then
 	script.Parent:Destroy()
 end
-local key = script:WaitForChild("passwd").Value
+local key: string = script:WaitForChild("passwd").Value
 script:WaitForChild("passwd"):Destroy()
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local meteorFolder = replicatedStorage:WaitForChild("_Meteor")
-local r9 = meteorFolder:WaitForChild("__r9")
-local players = game:GetService("Players")
-local player = players.LocalPlayer
-local gui = player.PlayerGui.MeteorGui.Login.TextButton
-local checkAuth = gui.Parent.Startup.CheckAuth
-local openGui = gui.Parent.Startup.OpenGui
-local box = gui.TextBox
-local button = gui.Parent.Parent.Frame
-local pass = nil
-local authEvent = meteorFolder:WaitForChild("__r1")
-local isAuth = false
-local isAdmin = meteorFolder:WaitForChild("__r2"):InvokeServer(key, player)
-local check = meteorFolder:WaitForChild("__r3")
+local replicatedStorage: ReplicatedStorage = game:GetService("ReplicatedStorage")
+local meteorFolder = replicatedStorage:WaitForChild("_Meteor") :: Folder
+local players: Players = game:GetService("Players")
+local player: Player = players.LocalPlayer
+local gui = player.PlayerGui:WaitForChild("MeteorGui"):WaitForChild("Login"):WaitForChild("TextButton") :: TextButton
+local checkAuth = player.PlayerGui:WaitForChild("MeteorGui"):WaitForChild("Login"):WaitForChild("CheckAuth") :: BindableFunction
+local openGui = player.PlayerGui:WaitForChild("MeteorGui"):WaitForChild("Login"):WaitForChild("OpenGui") :: BindableEvent
+local box = gui:WaitForChild("TextBox") :: TextBox
+local button = player.PlayerGui:WaitForChild("MeteorGui"):WaitForChild("Frame") :: Frame
+local pass: string = ""
+local authEvent = meteorFolder:WaitForChild("__r1") :: RemoteFunction
+local isAuth: boolean = false
+local isAdmin = (meteorFolder:WaitForChild("__r2") :: RemoteFunction):InvokeServer(key, player)
+local check = meteorFolder:WaitForChild("__r3") :: RemoteFunction
 
-box.FocusLost:Connect(function(e)
+box.FocusLost:Connect(function(e: boolean)
 	if not e then return end
 	if box.Text == "" then return end
 	pass = box.Text
-	local authed = authEvent:InvokeServer(key, pass)
+	local authed: boolean = authEvent:InvokeServer(key, pass)
 	if authed then
 		isAuth = true
-		gui.Parent.Visible = false
+		(gui.Parent :: Frame).Visible = false
 		openGui:Fire()
 	end
 end)

@@ -68,37 +68,35 @@
 
 
 
-
+--!strict
 -- Variables
-local serverStorage = game:GetService("ServerStorage")
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local players = game:GetService("Players")
-local meteorFolder = serverStorage:WaitForChild("_Meteor")
-local meteorFolderReplicated = replicatedStorage:WaitForChild("_Meteor")
-local loadEvent = meteorFolder:WaitForChild("load.event")
-local r9 = meteorFolderReplicated:WaitForChild("__r9")
-local serverKickEvent = meteorFolder:WaitForChild("kick.player")
-local verifyEvent = meteorFolder:WaitForChild("key.verify")
-local rand = require(script.rand)
+local serverStorage: ServerStorage = game:GetService("ServerStorage")
+local replicatedStorage: ReplicatedStorage = game:GetService("ReplicatedStorage")
+local players: Players = game:GetService("Players")
+local meteorFolder = serverStorage:WaitForChild("_Meteor") :: Folder
+local meteorFolderReplicated = replicatedStorage:WaitForChild("_Meteor") :: Folder
+local loadEvent = meteorFolder:WaitForChild("load.event") :: BindableFunction
+local r9 = meteorFolderReplicated:WaitForChild("__r9") :: RemoteEvent
+local serverKickEvent = meteorFolder:WaitForChild("kick.player") :: BindableEvent
+local verifyEvent = meteorFolder:WaitForChild("key.verify") :: BindableFunction
 local passwordService = require(script.PasswordService)
-local validKeys = meteorFolder:WaitForChild(".keys")
-local session = nil
-local temp = nil
-local key = meteorFolder:FindFirstChild("key.security").Value
-local kick_messages = script:WaitForChild(".config"):WaitForChild("Messages")
-local log = meteorFolder:WaitForChild(".log")
-local kickprefix = script:GetAttribute("kickPrefix")
-local excludeAdmins = script:GetAttribute("excludeAdmins")
-local excludeOnLogin = script:GetAttribute("excludeOnLogin")
-local checkAuth = meteorFolder:WaitForChild("admin.check")
-local checkAuth2 = meteorFolder:WaitForChild("check.admin")
+local validKeys = meteorFolder:WaitForChild(".keys") :: Folder
+local session: string = ""
+local key = (meteorFolder:WaitForChild("key.security") :: StringValue).Value
+local kick_messages = script:WaitForChild(".config"):WaitForChild("Messages") :: Folder
+local log = meteorFolder:WaitForChild(".log") :: BindableEvent
+local kickprefix: string = script:GetAttribute("kickPrefix")
+local excludeAdmins: boolean = script:GetAttribute("excludeAdmins")
+local excludeOnLogin: boolean = script:GetAttribute("excludeOnLogin")
+local checkAuth = meteorFolder:WaitForChild("admin.check") :: BindableFunction
+local checkAuth2 = meteorFolder:WaitForChild("check.admin") :: BindableFunction
 
 -- Wait for load
-loadEvent.OnInvoke = function(message)
+loadEvent.OnInvoke = function(message: string)
 	session = message
 end
 
-while not session do
+while session == "" do
 	task.wait()
 end
 
@@ -114,13 +112,6 @@ if not script:IsDescendantOf(game:GetService("ServerScriptService")) then
 end
 --[[------------------------------------------------]]
 
-if passwordService.Password("Meteor Anti-Cheat", "QuixaqGames") ~= "h_QuixaqGamesgf955f0e269e96b2c373ae8b3e57f76c7c17584e7634f647addad8ae0567d26ee9fde80829678697632fc6929aec4b4a461f440b9929c98706c9642a92d36c7d1" then
-	print("METEOR ANTI-CHEAT: FATAL ERROR - CHECKS FAILED, TRY REINSTALLING METEOR")
-	print("WARNING: METEOR WILL NOT CONTINUE RUNNING.")
-	script:Destroy()
-end
-
-
 -- Verify session
 if session ~= key then
 	print("METEOR ANTI-CHEAT: FATAL ERROR - UNABLE TO VERIFY SESSION. IT MAY BE CAUSED BY CORRUPT OR MODIFIED FILES OR ANOTHER SCRIPT INTERFERING WITH METEOR'S FILES. TRY REINSTALLING METEOR.")
@@ -129,10 +120,14 @@ if session ~= key then
 end
 
 -- Functions
-local function verify(key, player)
+local function verify(key: string, player: Player): boolean
 	if key == nil then return false end
-	local keyObject = validKeys:FindFirstChild(player.UserId):FindFirstChild(key)
-	if not keyObject or keyObject == nil then
+	local keysFolder = validKeys:FindFirstChild(tostring(player.UserId)) :: Folder?
+	if not keysFolder then
+	    return false
+	end
+	local keyObject: Instance? = validKeys:FindFirstChild(key)
+	if not keyObject then
 		return false
 	end
 	if not keyObject:IsA("StringValue") then
@@ -144,53 +139,55 @@ local function verify(key, player)
 	return true
 end
 
-local function kick(player, reason)
+local function kick(player: Player, reason: string)
 	if excludeAdmins and checkAuth:Invoke(key, player) then return end
 	if excludeAdmins and excludeOnLogin == false and checkAuth2:Invoke(key, player) then return end
 	if kick_messages:FindFirstChild(reason) then
-		reason = kick_messages:FindFirstChild(reason).Value
+	    if (kick_messages:FindFirstChild(reason) :: Instance):IsA("StringValue") then
+			reason = (kick_messages:FindFirstChild(reason) :: StringValue).Value
+		end
 	end
-	player:Kick(tostring(kickprefix)..tostring(reason))
+	player:Kick(kickprefix..reason)
 	log:Fire(key,{"Player", "Mod", "AC"},player.DisplayName.."(@"..player.Name..", "..player.UserId..") has been kicked by Meteor Anti-Cheat for: "..tostring(reason))
 end
 
 -- Events
-r9.OnServerEvent:Connect(function(player, key)
+r9.OnServerEvent:Connect(function(player: Player, key: string)
 	if not verify(key, player) then
-		kick(player, "cheat")
+		kick(player, "unauthorized")
 		return
 	end
 	kick(player, "cheat")
 end)
-serverKickEvent.Event:Connect(function(key, player, reason)
+serverKickEvent.Event:Connect(function(key: string, player: Player, reason: string)
 	if key ~= session then
 		return
 	end
 	kick(player, reason)
 end)
-verifyEvent.OnInvoke = function(mainKey, player, key)
+verifyEvent.OnInvoke = function(mainKey: string, player: Player, key: string): boolean
 	if mainKey ~= session then
-		return
+		return false
 	end
 	return verify(key, player)
 end
 
 -- Logging
-players.PlayerAdded:Connect(function(player)
+players.PlayerAdded:Connect(function(player: Player)
 	log:Fire(key,{"Player"},player.DisplayName.."(@"..player.Name..", "..player.UserId..") joined the game.")
 	player.Chatted:Connect(function(msg)
 		log:Fire(key,{"Chat"}, player.DisplayName.."(@"..player.Name..", "..player.UserId.."): "..msg)
 	end)
 end)
 
-players.PlayerRemoving:Connect(function(player)
+players.PlayerRemoving:Connect(function(player: Player)
 	log:Fire(key,{"Player"}, player.DisplayName.."(@"..player.Name..", "..player.UserId..") left the game.")
-end)
+end);
 
-meteorFolderReplicated:WaitForChild("__r5").OnServerEvent:Connect(function(player, key, msg)
+(meteorFolderReplicated:WaitForChild("__r5") :: RemoteEvent).OnServerEvent:Connect(function(player: Player)
 	kick(player, "cheat")
-end)
+end);
 
-meteorFolderReplicated:WaitForChild("__r10").OnServerInvoke = function(player, key)
+(meteorFolderReplicated:WaitForChild("__r10") :: RemoteFunction).OnServerInvoke = function(player: Player)
 	kick(player, "cheat")
 end

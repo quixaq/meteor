@@ -1,20 +1,23 @@
+--!strict
 if not script:FindFirstChild("passwd") or script:FindFirstChild("passwd") == nil then
 	script.Parent:Destroy()
 end
-local key = script:WaitForChild("passwd").Value
+if not script:FindFirstChild("passwd"):IsA("StringValue") then
+	script.Parent:Destroy()
+end
+local key: string = script:WaitForChild("passwd").Value
 script:WaitForChild("passwd"):Destroy()
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local meteorFolder = replicatedStorage:WaitForChild("_Meteor")
-local r9 = meteorFolder:WaitForChild("__r9")
-local r8 = meteorFolder:WaitForChild("__r8")
-local r11 = meteorFolder:WaitForChild("__r11")
+local replicatedStorage: ReplicatedStorage = game:GetService("ReplicatedStorage")
+local meteorFolder = replicatedStorage:WaitForChild("_Meteor") :: Folder
+local r9 = meteorFolder:WaitForChild("__r9") :: RemoteEvent
+local r8 = meteorFolder:WaitForChild("__r8") :: RemoteEvent
+local r11 = meteorFolder:WaitForChild("__r11") :: RemoteFunction
 
 local function f1()
-	if not meteorFolder:FindFirstChild("__r9") or meteorFolder:FindFirstChild("__r9") == nil then
+	if not meteorFolder:FindFirstChild("__r9") then
 		return
 	end
-	local v3 = script.Parent:GetChildren()
-	if #v3 ~= r11:InvokeServer(key) then
+	if #script.Parent:GetChildren() ~= r11:InvokeServer(key) then
 		r9:FireServer(key)
 		return
 	end

@@ -1,12 +1,15 @@
+--!strict
 if not script:FindFirstChild("passwd") or script:FindFirstChild("passwd") == nil then
 	script.Parent:Destroy()
 end
-local key = script:FindFirstChild("passwd").Value
+if not script:FindFirstChild("passwd"):IsA("StringValue") then
+	script.Parent:Destroy()
+end
+local key: string = script:FindFirstChild("passwd").Value
 script:WaitForChild("passwd"):Destroy()
-local player = game:GetService("Players").LocalPlayer
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local meteorFolder = replicatedStorage:WaitForChild("_Meteor")
-local r9 = meteorFolder:WaitForChild("__r9")
+local replicatedStorage: ReplicatedStorage = game:GetService("ReplicatedStorage")
+local meteorFolder = replicatedStorage:WaitForChild("_Meteor") :: Folder
+local r9 = meteorFolder:WaitForChild("__r9") :: RemoteEvent
 
 script.Parent.ChildRemoved:Connect(function(child)
 	r9:FireServer(key)

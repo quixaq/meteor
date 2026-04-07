@@ -1,34 +1,28 @@
-local serverStorage = game:GetService("ServerStorage")
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local players = game:GetService("Players")
-local meteorFolder = serverStorage:WaitForChild("_Meteor")
-local meteorFolderReplicated = replicatedStorage:WaitForChild("_Meteor")
-local serverKickEvent = meteorFolder:WaitForChild("kick.player")
-local rand = require(script.Parent.rand)
-local validKeys = meteorFolder:WaitForChild(".keys")
-local key = meteorFolder:FindFirstChild("key.security").Value
-local kick_messages = script.Parent:WaitForChild(".config"):WaitForChild("Messages")
-local runService = game:GetService("RunService")
-local maxSPS = script.Parent:GetAttribute("MaxSPS")
-local maxSitSPS = script.Parent:GetAttribute("MaxSitSPS")
-local sitDetection = true
-if not maxSitSPS then
+--!strict
+local serverStorage: ServerStorage = game:GetService("ServerStorage")
+local players: Players = game:GetService("Players")
+local meteorFolder = serverStorage:WaitForChild("_Meteor") :: Folder
+local kickEvent = meteorFolder:WaitForChild("kick.player") :: BindableEvent
+local key: string = (meteorFolder:WaitForChild("key.security") :: StringValue).Value
+local maxSPS: number = script.Parent:GetAttribute("MaxSPS")
+local maxSitSPS: number = script.Parent:GetAttribute("MaxSitSPS")
+local sitDetection: boolean = true
+if maxSitSPS == -1 then
 	sitDetection = false
-	maxSitSPS = 0
 end
 
-players.PlayerAdded:Connect(function(player)
-	player.CharacterAdded:Connect(function(char)
-		local hrp = char:WaitForChild("HumanoidRootPart")
-		local humanoid = char:WaitForChild("Humanoid")
-		local lastPos = hrp.Position
+players.PlayerAdded:Connect(function(player: Player)
+	player.CharacterAdded:Connect(function(char: Model)
+		local hrp = char:WaitForChild("HumanoidRootPart") :: BasePart
+		local humanoid = char:WaitForChild("Humanoid") :: Humanoid
+		local lastPos: Vector3 = hrp.Position
 		while task.wait(1) do
-			local sit = humanoid.Sit and sitDetection
+			local sit: boolean = humanoid.Sit and sitDetection
 			if (hrp.Position - lastPos).Magnitude > maxSPS and not sit then
-				serverKickEvent:Fire(key, player, "cheat")
+				kickEvent:Fire(key, player, "cheat")
 			end
 			if (hrp.Position - lastPos).Magnitude > maxSitSPS and sit then
-				serverKickEvent:Fire(key, player, "cheat")
+				kickEvent:Fire(key, player, "cheat")
 			end
 			lastPos = hrp.Position
 		end

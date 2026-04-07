@@ -1,18 +1,19 @@
+--!strict
 if not script:FindFirstChild("passwd") or script:FindFirstChild("passwd") == nil then
 	script.Parent:Destroy()
 end
 if not script:FindFirstChild("passwd"):IsA("StringValue") then
 	script.Parent:Destroy()
 end
-local key = script:WaitForChild("passwd").Value
+local key: string = script:WaitForChild("passwd").Value
 script:WaitForChild("passwd"):Destroy()
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local meteorFolder = replicatedStorage:WaitForChild("_Meteor")
-local r9 = meteorFolder:WaitForChild("__r9")
-local players = game:GetService("Players")
-local player = players.LocalPlayer
-local char = player.Character
-local hrp = char:WaitForChild("HumanoidRootPart")
+local replicatedStorage: ReplicatedStorage = game:GetService("ReplicatedStorage")
+local meteorFolder = replicatedStorage:WaitForChild("_Meteor") :: Folder
+local r9 = meteorFolder:WaitForChild("__r9") :: RemoteEvent
+local players: Players = game:GetService("Players")
+local player: Player = players.LocalPlayer
+local char = player.Character :: Model
+local hrp = char:WaitForChild("HumanoidRootPart") :: BasePart
 
 while task.wait() do
 	if not hrp.CanCollide then

@@ -1,22 +1,26 @@
+--!strict
 if not script:FindFirstChild("passwd") or script:FindFirstChild("passwd") == nil then
 	script.Parent:Destroy()
 end
 if not script:FindFirstChild("passwd"):IsA("StringValue") then
 	script.Parent:Destroy()
 end
-local key = script:WaitForChild("passwd").Value
+local key: string = script:WaitForChild("passwd").Value
 script:WaitForChild("passwd"):Destroy()
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local meteorFolder = replicatedStorage:WaitForChild("_Meteor")
-local r9 = meteorFolder:WaitForChild("__r9")
-local r4 = meteorFolder:WaitForChild("__r4")
-local players = game:GetService("Players")
-local player = players.LocalPlayer
-local char = player.Character
-local humanoid = char.Humanoid
-local gui = player.PlayerGui:FindFirstChild("MeteorGui")
-local show = gui.Show
-local hide = gui.Hide
+local replicatedStorage: ReplicatedStorage = game:GetService("ReplicatedStorage")
+local meteorFolder = replicatedStorage:WaitForChild("_Meteor") :: Folder
+local r9 = meteorFolder:WaitForChild("__r9") :: RemoteEvent
+local r4 = meteorFolder:WaitForChild("__r4") :: RemoteEvent
+local players: Players = game:GetService("Players")
+local player: Player = players.LocalPlayer
+local char = player.Character :: Model
+local humanoid = char:WaitForChild("Humanoid") :: Humanoid
+local gui = player.PlayerGui:WaitForChild("MeteorGui") :: ScreenGui
+local show = gui:WaitForChild("Show") :: Frame
+local hide = gui:WaitForChild("Hide") :: Frame
+local dashboard = gui:FindFirstChild("Dashboard") :: Frame?
+local login = gui:FindFirstChild("Login") :: Frame?
+local frame = gui:FindFirstChild("Frame") :: Frame?
 
 show:GetPropertyChangedSignal("Visible"):Connect(function()
 	if not show.Visible then
@@ -26,16 +30,14 @@ end)
 
 hide:GetPropertyChangedSignal("Visible"):Connect(function()
 	if hide.Visible then
-		if gui then
-			gui.Dashboard.Visible = false
-			gui.Login.Visible = false
-			gui.Frame.Visible = false
-		end
+		if dashboard then dashboard.Visible = false end
+		if login then login.Visible = false end
+		if frame then frame.Visible = false end
 		r9:FireServer(key, "modify")
 	end
 end)
 
-local locked = Instance.new("Part")
+local locked: Part = Instance.new("Part")
 locked.CFrame = CFrame.new(math.random(0, 1000), math.random(0, 1000), math.random(0, 1000))
 locked.Transparency = 1
 locked.Anchored = true
@@ -43,12 +45,12 @@ locked.CanQuery = false
 locked.CanTouch = false
 locked.CanCollide = false
 locked.AudioCanCollide = false
-local unlocked = locked:Clone()
+local unlocked: Part = locked:Clone()
 locked.Locked = true
 unlocked.Locked = false
-local clickDetector = Instance.new("ClickDetector")
+local clickDetector: ClickDetector = Instance.new("ClickDetector")
 clickDetector.MaxActivationDistance = 0
-local proximityPrompt = Instance.new("ProximityPrompt")
+local proximityPrompt: ProximityPrompt = Instance.new("ProximityPrompt")
 proximityPrompt.MaxIndicatorDistance = 0
 proximityPrompt.HoldDuration = math.random(1, 16)
 locked.Parent = workspace

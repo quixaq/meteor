@@ -1,26 +1,28 @@
 -- Meteor's password hashing service. Used to simplify hashing for our users and secure passwords.
+--!strict
 
 local cryptography = require(script.Parent.Packages.cryptography)
 local rand = require(script.Parent.rand)
 
-local module = {}
+export type ModuleType = {
+    Password: (string, string) -> string
+}
+local module: ModuleType = {} :: any
 
-function module.Password(pass, salt)
+function module.Password(pass: string, salt: string): string
 	if salt == "" then
 		salt = rand.alphan(32)
-		while string.find(salt, "g") do
-			salt = string.gsub(salt, "g", rand.alphan(1))
-		end
 	end
-	local pass, _ = cryptography.Hashing.SHA2.SHA256(buffer.fromstring(pass))
-	local pass, _ = buffer.tostring(cryptography.Utilities.Base64.Encode(buffer.fromstring(cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(salt..pass)))))
+	local a, _ = cryptography.Hashing.SHA2.SHA256(buffer.fromstring(pass))
+	local b, _ = cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(salt..a))
+	pass = buffer.tostring(cryptography.Utilities.Base64.Encode(buffer.fromstring(b)))
 	for i=1, 10 do
-	    local x, _ = cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(pass))
-		pass = x
+	    local c, _ = cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(pass))
+		pass = c
 	end
-	local pass, _ = cryptography.Hashing.SHA2.SHA512(buffer.fromstring(pass))
-	local pass, _ = cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(pass))
-	return "h_"..salt.."g"..pass
+	local d, _ = cryptography.Hashing.SHA2.SHA512(buffer.fromstring(pass))
+	local e, _ = cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(d))
+	return "h_"..salt..e
 end
 
 return module
