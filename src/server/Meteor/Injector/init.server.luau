@@ -24,7 +24,7 @@ local function copyDirectory(source: Instance, destination: Instance, player: Pl
 		if child:IsA("Folder") then
 			local folder = destination:FindFirstChild(child.Name)
 			if not folder then
-				local newFolder = Instance.new("Folder")
+				local newFolder: Folder = Instance.new("Folder")
 				newFolder.Name = child.Name
 				newFolder.Archivable = child.Archivable
 				newFolder.Parent = destination

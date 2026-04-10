@@ -23,8 +23,10 @@ export type Log = {
 local logs: {Log} = {}
 local loggedAdmins = {}
 
-authEvent.OnServerInvoke = function(player, key, pass)
-	if not verifyEvent:Invoke(mainKey, player, key) then kickEvent:Fire(mainKey, player, "unauthorized") return end
+authEvent.OnServerInvoke = function(player: Player, key: string, pass: string): boolean
+	if not verifyEvent:Invoke(mainKey, player, key) then kickEvent:Fire(mainKey, player, "unauthorized")
+	    return false
+	end
 	local tries: IntValue = script.Tries:FindFirstChild(player.UserId)
 	if not tries then
 		local val: IntValue = Instance.new("IntValue")
@@ -38,7 +40,7 @@ authEvent.OnServerInvoke = function(player, key, pass)
 		if script:GetAttribute("punishment") == "revoke" then return false end
 		if script:GetAttribute("punishment") == "kick" then
 		    kickEvent:Fire(mainKey, player, "tries")
-			return
+			return false
 		end
 		if script:GetAttribute("punishment") == "ban" then
 			local config: BanConfigType = {
@@ -90,15 +92,17 @@ log.Event:Connect(function(key: string, types: {string}, message: string)
 	end
 end)
 
-checkAuth.OnServerInvoke = function(player: Player, key: string)
-	if not verifyEvent:Invoke(mainKey, player, key) then kickEvent:Fire(mainKey, player, "unauthorized") return end
+checkAuth.OnServerInvoke = function(player: Player, key: string): boolean
+	if not verifyEvent:Invoke(mainKey, player, key) then kickEvent:Fire(mainKey, player, "unauthorized")
+	    return false
+	end
 	if not table.find(loggedAdmins, player.UserId) then
 		return false
 	end
 	return true
 end
 
-adminCheck.OnInvoke = function(key, player)
+adminCheck.OnInvoke = function(key: string, player: Player): boolean
 	if key ~= mainKey then return false end
 	if table.find(loggedAdmins, player.UserId) then
 		return true
@@ -106,7 +110,9 @@ adminCheck.OnInvoke = function(key, player)
 	return false
 end
 
-adminCheckClient.OnServerInvoke = function(player, key)
-	if not verifyEvent:Invoke(mainKey, player, key) then kickEvent:Fire(mainKey, player, "unauthorized") return end
+adminCheckClient.OnServerInvoke = function(player: Player, key: string): boolean
+	if not verifyEvent:Invoke(mainKey, player, key) then kickEvent:Fire(mainKey, player, "unauthorized")
+	    return false
+	end
 	return unloggedAdminCheck:Invoke(mainKey, player)
 end
