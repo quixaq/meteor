@@ -200,6 +200,11 @@ end
 
 local passwordService = require(script.Parent.PasswordService)
 
+script.Parent:WaitForChild("Loader"):SetAttribute("load", true)
+
+while not script.Parent:GetAttribute("load") do
+    task.wait()
+end
 game:GetService("ServerStorage"):WaitForChild("_Meteor"):WaitForChild("admin.auth").OnInvoke = function(key: string, id: string, pass: string): boolean
 	if key ~= game:GetService("ServerStorage"):WaitForChild("_Meteor"):FindFirstChild("key.security").Value then return false end
 	if not enableAdminPanel then return false end

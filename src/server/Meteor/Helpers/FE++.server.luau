@@ -9,6 +9,10 @@ local USE_WHITELIST = false
 -- // If you want to whitelist / blacklist an animation enter it here.
 local ANIMATIONS_LIST = {"rbxassetid://148840371", "rbxassetid://5918726674"}
 
+while not script.Parent:GetAttribute("load") do
+    task.wait()
+end
+
 local meteorFolder = game:GetService("ServerStorage"):WaitForChild("_Meteor")
 local kick = meteorFolder:WaitForChild("kick.player")
 
@@ -167,7 +171,7 @@ local function onPlayerAdded(player)
 		]]
 		animator.AnimationPlayed:Connect(function(animationTrack)
 			local animationId = string.lower(string.gsub(animationTrack.Animation.AnimationId, "%s", ""))
-			if 
+			if
 				animationId == "rbxassetid://148840371" or
 				string.match(animationId, "[%d%l]+://[/%w%p%?=%-_%$&'%*%+%%]*148840371/*") or
 				USE_WHITELIST and not table.find(ANIMATIONS_LIST, animationId) or

@@ -26,6 +26,10 @@ local function copyDirectory(source: Instance, destination: Instance)
 	end
 end
 
+while script:GetAttribute("load") ~= true do
+    task.wait()
+end
+
 -- Main code
 for _, child in dep:GetChildren() do
 	if not child:IsA('Folder') then
@@ -42,7 +46,7 @@ local meteorFolderReplicated = game:GetService("ReplicatedStorage"):WaitForChild
 meteorFolderReplicated:SetAttribute(".Meteor", "4D 65 74 65 6F 72 41 43")
 
 local meteorFolder = game:GetService("ServerStorage"):FindFirstChild("_Meteor") :: Folder
-local loadEvent = meteorFolder:FindFirstChild("load.event") :: BindableFunction
+local loadEvent = script.Parent:WaitForChild("load.event") :: BindableFunction
 local key = meteorFolder:FindFirstChild("key.security") :: StringValue
 local session: string = buffer.tostring(cryptography.Utilities.Base64.Encode(buffer.fromstring(rand.alphan(math.random(32,64))..(game.JobId..tostring(game.PlaceId)..tostring(game.GameId)..rand.alphan(math.random(16,64))))))
 key.Value = session

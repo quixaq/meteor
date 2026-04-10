@@ -5,6 +5,10 @@
 
 -- TODO: Make it generate spoof folders with spoof scripts to make it harder to guess the real one
 
+while not script.Parent:GetAttribute("load") do
+    task.wait()
+end
+
 local scripts: Folder = script.char
 local players: Players = game:GetService("Players")
 local serverStorage: ServerStorage = game:GetService("ServerStorage")

@@ -70,18 +70,28 @@
 
 --!strict
 -- Variables
+
+-- Wait for load
+local loadEvent = script:WaitForChild("load.event") :: BindableFunction
+
+local session: string = ""
+loadEvent.OnInvoke = function(message: string)
+	session = message
+end
+
+while session == "" do
+	task.wait()
+end
+
 local serverStorage: ServerStorage = game:GetService("ServerStorage")
 local replicatedStorage: ReplicatedStorage = game:GetService("ReplicatedStorage")
 local players: Players = game:GetService("Players")
 local meteorFolder = serverStorage:WaitForChild("_Meteor") :: Folder
 local meteorFolderReplicated = replicatedStorage:WaitForChild("_Meteor") :: Folder
-local loadEvent = meteorFolder:WaitForChild("load.event") :: BindableFunction
 local r9 = meteorFolderReplicated:WaitForChild("__r9") :: RemoteEvent
 local serverKickEvent = meteorFolder:WaitForChild("kick.player") :: BindableEvent
 local verifyEvent = meteorFolder:WaitForChild("key.verify") :: BindableFunction
-local passwordService = require(script.PasswordService)
 local validKeys = meteorFolder:WaitForChild(".keys") :: Folder
-local session: string = ""
 local key = (meteorFolder:WaitForChild("key.security") :: StringValue).Value
 local kick_messages = script:WaitForChild(".config"):WaitForChild("Messages") :: Folder
 local log = meteorFolder:WaitForChild(".log") :: BindableEvent
@@ -90,15 +100,6 @@ local excludeAdmins: boolean = script:GetAttribute("excludeAdmins")
 local excludeOnLogin: boolean = script:GetAttribute("excludeOnLogin")
 local checkAuth = meteorFolder:WaitForChild("admin.check") :: BindableFunction
 local checkAuth2 = meteorFolder:WaitForChild("check.admin") :: BindableFunction
-
--- Wait for load
-loadEvent.OnInvoke = function(message: string)
-	session = message
-end
-
-while session == "" do
-	task.wait()
-end
 
 -- Checks
 --[[
@@ -121,7 +122,6 @@ end
 
 -- Functions
 local function verify(key: string, player: Player): boolean
-	if key == nil then return false end
 	local keysFolder = validKeys:FindFirstChild(tostring(player.UserId)) :: Folder?
 	if not keysFolder then
 	    return false
@@ -191,3 +191,5 @@ end);
 (meteorFolderReplicated:WaitForChild("__r10") :: RemoteFunction).OnServerInvoke = function(player: Player)
 	kick(player, "cheat")
 end
+
+script:SetAttribute("load", true)

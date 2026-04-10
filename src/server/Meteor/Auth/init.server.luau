@@ -1,4 +1,9 @@
 --!strict
+
+while not script.Parent:GetAttribute("load") do
+    task.wait()
+end
+
 local serverStorage: ServerStorage = game:GetService("ServerStorage")
 local replicatedStorage: ReplicatedStorage = game:GetService("ReplicatedStorage")
 local players: Players = game:GetService("Players")

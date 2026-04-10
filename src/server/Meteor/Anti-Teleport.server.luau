@@ -1,6 +1,12 @@
 --!strict
+
 local serverStorage: ServerStorage = game:GetService("ServerStorage")
 local players: Players = game:GetService("Players")
+
+while not script.Parent:GetAttribute("load") do
+    task.wait()
+end
+
 local meteorFolder = serverStorage:WaitForChild("_Meteor") :: Folder
 local kickEvent = meteorFolder:WaitForChild("kick.player") :: BindableEvent
 local key: string = (meteorFolder:WaitForChild("key.security") :: StringValue).Value
