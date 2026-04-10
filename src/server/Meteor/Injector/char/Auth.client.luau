@@ -39,6 +39,6 @@ checkAuth.OnInvoke = function()
 end
 
 isAuth = check:InvokeServer(key)
-if not isAdmin then
-	button.Visible = false
+if isAdmin then
+	button.Visible = true
 end
