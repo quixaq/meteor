@@ -126,7 +126,7 @@ local function verify(key: string, player: Player): boolean
 	if not keysFolder then
 	    return false
 	end
-	local keyObject: Instance? = validKeys:FindFirstChild(key)
+	local keyObject: Instance? = validKeys:WaitForChild(tostring(player.UserId)):FindFirstChild(key)
 	if not keyObject then
 		return false
 	end
