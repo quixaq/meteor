@@ -6,7 +6,7 @@
 local enableAdminPanel: boolean = true -- Enables admin UI panel. When disabled, exludeAdmins will always apply, even if excludeOnLogin is enabled. Default is true.
 local admins: {[string]: string} = { -- Format: u_<userId> = "<admin_panel_password>",
 	u_userId = "s_password", -- Plain text use case.
-	u_UserId = "h_nLq8oDAnL8LCY5JBYQQnHXGB7MPdDVWh6f2afa02d615a04e8ac1fbbf34d49db43f2fb09030cfae08e6390e97d867bb6a4da5863429512e499e3b099350eb2873e50f0389d7a7f7c8f33ae70108d65e5c", -- Hash use case.
+	u_UserId = "h_nUWzC7Mq9Dj5aiVunqllCJI4YQwx2WTD117b4d412293bdead6d839cd5b0c824f507dd3d099718b284538d145b70d913d9c6bfb1c6e76c491e387554e12ab944b7ddcffc5c8dc119579c124d14a185848", -- Hash use case.
 	--[[
 	For security reasons, we strongly recommend you to use hashes to store passwords here.
 	However to not overcomplicate stuff, we make it not required.

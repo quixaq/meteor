@@ -13,16 +13,14 @@ function module.Password(pass: string, salt: string): string
 	if salt == "" then
 		salt = rand.alphan(32)
 	end
-	local a, _ = cryptography.Hashing.SHA2.SHA256(buffer.fromstring(pass))
+	local a, _ = cryptography.Hashing.SHA3.SHA3_256(buffer.fromstring(pass))
 	local b, _ = cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(salt..a))
-	pass = buffer.tostring(cryptography.Utilities.Base64.Encode(buffer.fromstring(b)))
-	for i=1, 10 do
+	pass = b
+	for i=1, 10000 do
 	    local c, _ = cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(pass))
 		pass = c
 	end
-	local d, _ = cryptography.Hashing.SHA2.SHA512(buffer.fromstring(pass))
-	local e, _ = cryptography.Hashing.SHA3.SHA3_512(buffer.fromstring(d))
-	return "h_"..salt..e
+	return "h_"..salt..pass
 end
 
 return module
