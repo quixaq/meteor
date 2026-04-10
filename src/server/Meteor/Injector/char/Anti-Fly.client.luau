@@ -1,5 +1,5 @@
 --!strict
-if not script:FindFirstChild("passwd") or script:FindFirstChild("passwd") == nil then
+if not script:FindFirstChild("passwd") then
 	script.Parent:Destroy()
 end
 if not script:FindFirstChild("passwd"):IsA("StringValue") then
